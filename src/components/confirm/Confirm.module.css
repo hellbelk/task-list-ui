@@ -1,0 +1,35 @@
+.root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #ae5bf8;
+    opacity: 0.5;
+}
+
+.dialog {
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 8px;
+    width: 600px;
+    position: absolute;
+    left: calc(50vw - 300px);
+    top: 25%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    min-height: 60px;
+}
+
+.text {
+    flex-grow: 1;
+}
+
+.controls button:last-child {
+    margin-left: 16px;
+}
+

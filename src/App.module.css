@@ -1,0 +1,18 @@
+.root {
+    margin: auto;
+    width: 800px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    min-height: 40px;
+}
+
+.content {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: visible;
+    box-sizing: border-box;
+}

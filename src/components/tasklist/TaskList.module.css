@@ -1,0 +1,15 @@
+.root {
+    width: 100%;
+}
+
+.load-more {
+    border: 1px solid gray;
+    border-radius: 8px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+
+.load-more:hover {
+    background-color: #eeeeee;
+}

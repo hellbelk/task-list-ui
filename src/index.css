@@ -11,3 +11,31 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.primary.text {
+  font-weight: bold;
+}
+
+.secondary.text {
+  font-style: italic;
+}
+
+.button {
+  height: 32px;
+  border-radius: 8px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.primary.button {
+  border: 1px solid #ae5bf8;
+}
+
+.secondary.button {
+  height: 32px;
+  border: none;
+}
+
+.button:hover {
+  background-color: #eeeeee;
+}

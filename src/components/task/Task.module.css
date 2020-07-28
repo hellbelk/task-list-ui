@@ -1,0 +1,60 @@
+.root {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    border-bottom: 1px solid darkgray;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    margin-bottom: 1em;
+
+    box-sizing: border-box;
+}
+
+.body {
+    flex-grow: 1;
+}
+
+.description {
+    margin-top: 0.4em;
+}
+
+.header {
+    min-height: 20px;
+    display: flex;
+    flex-direction: row;
+    line-height: 32px;
+    height: 32px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: #ae5bf8;
+    padding-left: 8px;
+    color: white;
+    box-sizing: border-box;
+}
+
+.header>div:first-child {
+    margin-right: 14px;
+}
+
+.delete {
+    width: 32px;
+    height: 32px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border: 1px solid #ae5bf8;
+    cursor: pointer;
+    padding: 0;
+    line-height: 32px;
+    box-sizing: border-box;
+}
+
+.delete>img {
+    margin: 3px;
+    width: 24px;
+    height: 24px;
+}
+
+.delete:hover {
+    background-color: #eee;
+}
