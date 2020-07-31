@@ -1,0 +1,38 @@
+.root {
+    display: flex;
+    flex-direction: row;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.root>div:first-child {
+    flex-grow: 1;
+}
+
+
+.description {
+    width: 100%;
+}
+
+.description textarea {
+    resize: none;
+}
+
+.main-fields {
+    display: flex;
+    align-items: stretch;
+    align-content: stretch;
+}
+.main-fields label {
+    flex-grow: 1;
+    box-sizing: border-box;
+}
+
+.main-fields label:first-child {
+    margin-right: 8px;
+}
+
+.main-fields input {
+    width: 100%;
+    box-sizing: border-box;
+}

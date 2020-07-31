@@ -1,4 +1,4 @@
-export interface SortModel {
+export interface ISort {
     property: string;
     direction: 'asc' | 'desc';
 }

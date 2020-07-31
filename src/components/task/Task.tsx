@@ -1,11 +1,11 @@
 import React from 'react';
-import {TaskModel} from '../../model/task.model';
+import {ITask} from '../../model/task.model';
 import styles from './Task.module.css';
 import deleteIcon from '../../images/delete_forever-24px.svg';
 
 interface TaskProps {
-    task: TaskModel
-    onDelete?: (task: TaskModel) => void;
+    task: ITask
+    onDelete?: (task: ITask) => void;
 }
 
 export default class Task extends React.Component<TaskProps> {

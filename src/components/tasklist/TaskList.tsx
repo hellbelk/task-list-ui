@@ -1,12 +1,12 @@
 import React from 'react';
-import {TaskModel} from '../../model/task.model';
+import {ITask} from '../../model/task.model';
 import Task from '../task/Task';
 import styles from './TaskList.module.css';
 
 interface TaskListProps {
     hasMore?: boolean;
-    tasks: TaskModel[];
-    onDelete?: (task: TaskModel) => void;
+    tasks: ITask[];
+    onDelete?: (task: ITask) => void;
     onLoadMore?: () => void;
 }
 

@@ -25,6 +25,7 @@ code {
   border-radius: 8px;
   background-color: transparent;
   cursor: pointer;
+  outline: none;
 }
 
 .primary.button {
@@ -38,4 +39,22 @@ code {
 
 .button:hover {
   background-color: #eeeeee;
+}
+
+button:active {
+  background-color: #cccccc !important;
+}
+
+input.text-field {
+  height: 32px;
+  border: 1px solid gray;
+  border-radius: 6px;
+  padding: 8px;
+}
+
+textarea.text-field {
+  border: 1px solid gray;
+  border-radius: 6px;
+  min-height: 32px;
+  padding: 8px;
 }

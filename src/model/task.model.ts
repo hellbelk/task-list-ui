@@ -1,9 +1,9 @@
-export interface TaskData {
+export interface ITaskData {
     priority: number;
     name: string,
     description: string;
 }
 
-export interface TaskModel extends TaskData{
+export interface ITask extends ITaskData{
     id: string,
 }
