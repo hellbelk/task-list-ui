@@ -15,8 +15,8 @@ export default function Confirm (props: ConfirmProps) {
                 <div className={styles.content}>
                     <div className={styles.text}>{text}</div>
                     <div className={styles.controls}>
-                        <button className="button primary" onClick={onConfirm}>Confirm</button>
-                        <button className="button secondary" onClick={onCancel}>Cancel</button>
+                        <button className="button primary" onClick={onConfirm}>Да</button>
+                        <button className="button secondary" onClick={onCancel}>Нет</button>
                     </div>
                 </div>
             </div>

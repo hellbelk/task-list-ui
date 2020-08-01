@@ -1,38 +1,68 @@
 .root {
     display: flex;
     flex-direction: row;
-    margin-top: 16px;
-    margin-bottom: 16px;
 }
 
-.root>div:first-child {
+.form {
     flex-grow: 1;
-}
-
-
-.description {
-    width: 100%;
-}
-
-.description textarea {
-    resize: none;
-}
-
-.main-fields {
     display: flex;
-    align-items: stretch;
-    align-content: stretch;
-}
-.main-fields label {
-    flex-grow: 1;
-    box-sizing: border-box;
+    flex-direction: row;
 }
 
-.main-fields label:first-child {
+.form input {
+    width: 100%;
+    box-sizing: border-box;
+
+}
+
+.form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    height: 36px;
+    max-height: 200px;
+}
+
+.form label {
+    display: block;
+}
+
+.form label:not(:last-child) {
+    display: block;
+    box-sizing: border-box;
     margin-right: 8px;
 }
 
-.main-fields input {
-    width: 100%;
-    box-sizing: border-box;
+.priority {
+    width: 112px;
+}
+
+.name {
+    width: 242px;
+
+}
+
+.description {
+    flex-grow: 1;
+}
+
+.controls {
+    display: flex;
+    margin-left: 8px;
+}
+
+.controls button {
+    margin-top: auto;
+    margin-bottom: 4px;
+}
+
+.sort {
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.sort-marker {
+    display: inline-block;
+    width: 10px;
+    height: 23px;
 }

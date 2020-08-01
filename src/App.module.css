@@ -1,13 +1,12 @@
 .root {
     margin: auto;
-    width: 800px;
+    width: 1024px;
     height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 .header {
-    min-height: 40px;
 }
 
 .content {

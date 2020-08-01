@@ -2,16 +2,19 @@ import React, {ChangeEvent} from 'react';
 import {ITaskData, ITask} from '../../model/task.model';
 import styles from './TaskForm.module.css';
 import {join} from '../../util';
+import {ISort} from '../../model/sort.model';
 
 interface TaskFormProps {
     task?: ITask | null;
     mode: 'edit' | 'search';
-    save: (task: ITaskData) => boolean;
+    currentSort?: ISort;
+    save: (task: ITaskData) => Promise<boolean>;
     filter?: (filterData: ITaskData) => void;
+    sort?: (sort: ISort) => void;
 }
 
 interface TaskFormState {
-    priority: number | null;
+    priority?: number;
     name: string;
     description: string;
     expanded: boolean;
@@ -26,7 +29,6 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
 
     getInitialState() {
         return {
-            priority: null,
             name: '',
             description: '',
             expanded: false
@@ -43,8 +45,10 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
 
     onPriorityChanged = (e: ChangeEvent<HTMLInputElement>) => {
         const {name} = this.state;
+        const rawValue = e.target.value;
         const value = Number(e.target.value);
-        if (!isNaN(value) && value > 0) {
+
+        if (!rawValue.length || !isNaN(value) && value > 0) {
             this.setState({priority: value})
             setTimeout(() => {
                 this.onFilter({
@@ -89,12 +93,6 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
         this.setState(this.getInitialState());
     }
 
-    toggle = () => {
-        const {expanded} = this.state;
-
-        this.setState({expanded: !expanded})
-    }
-
     onFilter(filterData: ITaskData) {
         const {filter} = this.props;
         if (filter) {
@@ -102,34 +100,66 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
         }
     }
 
+    onSort(property: string) {
+
+        return () => {
+            const {sort, currentSort} = this.props;
+
+            const newSort = currentSort ? {...currentSort} : {};
+
+            switch (newSort[property]) {
+                case 'asc': newSort[property] = 'desc'; break;
+                case 'desc': delete newSort[property]; break;
+                default: newSort[property] = 'asc';
+            }
+
+            if (sort) {
+                sort(newSort);
+            }
+        }
+
+    }
+
     render() {
         const {mode} = this.props;
         const {priority, name, description, expanded} = this.state;
+        const {sort, currentSort} = this.props;
+
+        const sortElement = (label: string, property: string) => {
+            let sortMarker = null;
+            if (currentSort) {
+                const sortDirection = currentSort[property];
+
+                const text = sortDirection ? sortDirection === 'asc' ? (<>&darr;</>) : (<>&uarr;</>) : (<>&#x21C5;</>);
+
+                sortMarker = (<span className={styles['sort-marker']}>{text}</span>);
+            }
+            return sort ? (
+                <span onClick={this.onSort(property)} className={styles.sort}>{label}{sortMarker}</span>
+            ) : (
+                <span>{label}{sortMarker}</span>
+            )
+        }
+
 
         return (
             <div className={styles.root}>
                 <div className={styles.form}>
-                    <div className={styles['main-fields']}>
-                        <label>
-                            Priority
-                            <input className={join('text-field')} value={priority || undefined} onChange={this.onPriorityChanged}/>
-                        </label>
-                        <label>
-                            Name
-                            <input className={join('text-field')} value={name} onChange={this.onNameChanged}/>
-                        </label>
-                    </div>
-                    {mode === 'edit' ? (
-                        <div>
-                            <div onClick={this.toggle}>Description</div>
-                            {expanded ? (
-                                <textarea className={join('text-field', styles.description)} value={description} onChange={this.onDescriptionChanged}/>
-                            ) : null}
-                        </div>
-                    ) : null}
+                    <label className={styles.priority}>
+                        {sortElement('Приоритет', 'priority')}
+                        <input className={join('text-field')} value={priority || ''} onChange={this.onPriorityChanged}/>
+                    </label>
+                    <label className={styles.name}>
+                        {sortElement('Заголовок', 'name')}
+                        <input className={join('text-field')} value={name} onChange={this.onNameChanged}/>
+                    </label>
+                    <label className={styles.description}>
+                        {sortElement('Описание', 'description')}
+                        <textarea className={join('text-field')} value={description} onChange={this.onDescriptionChanged}/>
+                    </label>
                 </div>
                 {mode === 'edit' ? (
-                    <div>
+                    <div className={styles.controls}>
                         <button disabled={!this.validate()} onClick={this.onSave} className="button primary">Добавить</button>
                     </div>
                 ):null}

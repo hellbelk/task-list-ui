@@ -2,6 +2,7 @@ import React from 'react';
 import {ITask} from '../../model/task.model';
 import styles from './Task.module.css';
 import deleteIcon from '../../images/delete_forever-24px.svg';
+import {join} from '../../util';
 
 interface TaskProps {
     task: ITask
@@ -18,20 +19,13 @@ export default class Task extends React.Component<TaskProps> {
     render() {
         const {priority, name, description} = this.props.task;
         return (
-            <div className={['task', styles.root].join(' ')}>
-                <div className={styles.body}>
-                    <div className={styles.header}>
-                        <div>{priority}</div>
-                        <div className="primary text">{name}</div>
-                    </div>
-                    {description && description.length ? (
-                        <div className={['secondary text', styles.description].join(' ')}>{description}</div>
-                    ) : null}
-
-                </div>
+            <div className={join('task', styles.root)}>
                 <div className={styles.controls}>
                     <div className={styles.delete} onClick={this.onDelete}><img src={deleteIcon}/></div>
                 </div>
+                <div className={styles.priority}>{priority}</div>
+                <div className={styles.name}>{name}</div>
+                <div className={styles.description}>{description}</div>
             </div>
         )
     }

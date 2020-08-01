@@ -14,7 +14,7 @@ interface AppState {
     tasks: ITask[];
     offset: number;
     limit: number;
-    sort: ISort[];
+    sort: ISort;
     total: number;
     selectionMode: 'delete' | 'edit' | null;
     selectedTask: ITask | null;
@@ -25,7 +25,7 @@ export default class App extends React.Component<any, AppState>{
         tasks: [],
         offset: 0,
         limit: 20,
-        sort: [],
+        sort: {},
         total: 0,
         selectedTask: null,
         selectionMode: null,
@@ -39,41 +39,30 @@ export default class App extends React.Component<any, AppState>{
     }
 
     async componentDidMount() {
-        const height = window.innerHeight - 40;
-        const limit = Math.ceil(height / 100);
+        const height = window.innerHeight - 65;
+        const limit = Math.ceil(height / 40);
+        this.defaultState.limit = limit;
         this.setState({limit});
         setTimeout(() => {
             this.loadPage();
         })
     }
 
-    async componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<AppState>, snapshot?: any) {
-        if (prevState.filters !== this.state.filters) {
-            if (Object.keys(prevState.filters).length !== Object.keys(this.state.filters).length
-                || Object.keys(prevState.filters).filter((property: string) => this.state.filters[property] !== prevState.filters[property]).length) {
-                const {limit, sort, filters} = this.state;
-
-                const res = await this.loadData(this.defaultState.offset, limit, sort, filters);
-                this.setState({offset: res.offset, tasks: res.tasks});
-            }
-        }
-    }
-
     async loadPage() {
         try {
             const {tasks, offset, limit, sort, filters} = this.state;
             const res = await this.loadData(offset, limit, sort, filters, tasks);
-            this.setState({offset: res.offset, tasks: res.tasks});
+            this.setState({offset: res.offset + res.limit, tasks: res.tasks, total: res.total});
         } catch (e) {
             console.log('can\'t load tasks');
         }
     }
 
-    async loadData(offset: number, limit: number, sort: ISort[], filters: IFilters, currentTasks?: ITask[]): Promise<{offset: number, limit: number, tasks: ITask[], total: number}> {
+    async loadData(offset: number, limit: number, sort: ISort, filters: IFilters, currentTasks?: ITask[]): Promise<{offset: number, limit: number, tasks: ITask[], total: number}> {
         const listData = await taskService.getTasks(offset, limit, sort, filters);
         return {
-            offset: listData.offset + listData.limit,
-            limit,
+            offset: listData.offset,
+            limit: listData.limit,
             tasks: [...(currentTasks || []), ...(listData.data || [])],
             total: listData.total
         }
@@ -106,11 +95,12 @@ export default class App extends React.Component<any, AppState>{
         this.setState({selectionMode: null, selectedTask: null});
     }
 
-    onSave = (data: ITaskData) => {
+    onSave = async (data: ITaskData) => {
+        await taskService.createTask(data);
         return true;
     }
 
-    onFilter = (data: ITaskData) => {
+    onFilter = async (data: ITaskData) => {
         if (data) {
             const filters: IFilters = {};
 
@@ -126,25 +116,44 @@ export default class App extends React.Component<any, AppState>{
                 filters.description = data.description;
             }
 
+            if (Object.keys(this.state.filters).length !== Object.keys(filters).length
+                || Object.keys(this.state.filters).filter((property: string) => filters[property] !== this.state.filters[property]).length) {
+                const {limit, sort, filters} = this.state;
+
+                const res = await this.loadData(this.defaultState.offset, limit, sort, filters);
+                this.setState({offset: res.offset, tasks: res.tasks, filters});
+            }
+
             this.setState({filters});
         }
     }
 
+    onSort = async (sort: ISort) => {
+        const {filters} = this.state;
+        const res = await this.loadData(this.defaultState.offset, this.defaultState.limit, sort, filters);
+        this.setState({offset: res.offset, limit: res.limit, total: res.total, sort, tasks: res.tasks});
+    }
+
     render() {
-        const {tasks, total, selectedTask, selectionMode} = this.state;
+        const {tasks, total, selectedTask, selectionMode, sort} = this.state;
 
         return (
             <React.Fragment>
                 <div className={styles.root}>
                     <div className={styles.header}>
-                        <TaskForm save={this.onSave} filter={this.onFilter} task={selectionMode === 'edit' ? selectedTask : null} mode={tasks.length ? 'search' : 'edit'}/>
+                        <TaskForm save={this.onSave}
+                                  filter={this.onFilter}
+                                  sort={this.onSort}
+                                  task={selectionMode === 'edit' ? selectedTask : null}
+                                  currentSort={sort}
+                                  mode={tasks.length ? 'search' : 'edit'}/>
                     </div>
                     <div className={styles.content}>
                         <TaskList tasks={tasks} hasMore={tasks.length < total} onLoadMore={this.onLoadMore} onDelete={this.onDelete}/>
                     </div>
                 </div>
                 {selectedTask && selectionMode === 'delete' ? (
-                    <Confirm text="Do you want to delete task?" onConfirm={this.onDeleteConfirm} onCancel={this.onDeleteCancel}/>
+                    <Confirm text="Вы действительно хотите удалить задачу?" onConfirm={this.onDeleteConfirm} onCancel={this.onDeleteCancel}/>
                 ) : null}
             </React.Fragment>
         )

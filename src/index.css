@@ -21,7 +21,7 @@ code {
 }
 
 .button {
-  height: 32px;
+  height: 38px;
   border-radius: 8px;
   background-color: transparent;
   cursor: pointer;
@@ -33,7 +33,6 @@ code {
 }
 
 .secondary.button {
-  height: 32px;
   border: none;
 }
 
@@ -46,15 +45,17 @@ button:active {
 }
 
 input.text-field {
-  height: 32px;
+  height: 38px;
   border: 1px solid gray;
   border-radius: 6px;
   padding: 8px;
+  outline: none;
 }
 
 textarea.text-field {
+  min-height: 38px;
   border: 1px solid gray;
   border-radius: 6px;
-  min-height: 32px;
   padding: 8px;
+  outline: none;
 }

@@ -1,4 +1,3 @@
 export interface ISort {
-    property: string;
-    direction: 'asc' | 'desc';
+    [property: string]: 'asc' | 'desc';
 }
