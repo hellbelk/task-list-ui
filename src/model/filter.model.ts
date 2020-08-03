@@ -1,3 +1,3 @@
 export interface IFilters {
-    [property: string]: string | number | boolean;
+    [property: string]: string | number;
 }

@@ -6,6 +6,10 @@
     border-bottom: 1px solid #cccccc;
 }
 
+.root:not(.selected) {
+    border-bottom: 1px solid #cccccc;
+}
+
 .priority {
     width: 50px;
 }
@@ -28,3 +32,8 @@
     margin-top: 7px;
     height: 32px;
 }
+
+.selected {
+    border: 3px solid green;
+}
+

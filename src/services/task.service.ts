@@ -16,6 +16,7 @@ class TaskService extends BaseService{
 
         if (filters && Object.keys(filters).length) {
             Object.keys(filters)
+                .filter((property: string) => filters[property])
                 .forEach((property: string) => params.append('filter', `${property}=${filters[property]}`))
         }
 
@@ -33,8 +34,15 @@ class TaskService extends BaseService{
         return this.request(`tasks/${id}`, 'DELETE');
     }
 
-    async createTask(data: ITaskData) {
-
+    async createTask(data: ITaskData): Promise<ITask | undefined> {
+        try {
+            const response = await this.request(`tasks`, 'POST', JSON.stringify(data));
+            if (response.ok) {
+                return response.json();
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 

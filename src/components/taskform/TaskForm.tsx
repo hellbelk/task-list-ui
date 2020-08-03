@@ -3,107 +3,112 @@ import {ITaskData, ITask} from '../../model/task.model';
 import styles from './TaskForm.module.css';
 import {join} from '../../util';
 import {ISort} from '../../model/sort.model';
+import {IFilters} from '../../model/filter.model';
 
 interface TaskFormProps {
-    task?: ITask | null;
     mode: 'edit' | 'search';
     currentSort?: ISort;
+    filters?: IFilters;
     save: (task: ITaskData) => Promise<boolean>;
-    filter?: (filterData: ITaskData) => void;
-    sort?: (sort: ISort) => void;
+    onChange?: (filterData: IFilters) => void;
+    onSort?: (sort: ISort) => void;
 }
 
-interface TaskFormState {
-    priority?: number;
-    name: string;
-    description: string;
-    expanded: boolean;
-}
-
-export default class TaskForm extends React.Component<TaskFormProps, TaskFormState>{
+export default class TaskForm extends React.Component<TaskFormProps>{
     constructor(props: TaskFormProps) {
         super(props);
-
-        this.state = this.getInitialState();
-    }
-
-    getInitialState() {
-        return {
-            name: '',
-            description: '',
-            expanded: false
-        }
     }
 
     validate(): boolean {
-        const {priority, name, description} = this.state;
+        const {priority, name} = this.props.filters || {};
 
-        return !!(priority && priority > 0
-            && name && name.length && name.length < 100
-            && (!description || !description.length || description.length < 2000));
+        return !!(priority && name);
     }
 
     onPriorityChanged = (e: ChangeEvent<HTMLInputElement>) => {
-        const {name} = this.state;
+        const data = this.props.filters || {};
+
         const rawValue = e.target.value;
         const value = Number(e.target.value);
 
-        if (!rawValue.length || !isNaN(value) && value > 0) {
-            this.setState({priority: value})
-            setTimeout(() => {
-                this.onFilter({
-                    priority: value,
-                    name,
-                    description: ''
-                });
-            })
+        const change: IFilters = {...data};
+
+        if (!rawValue.length || value > 0) {
+            change.priority = value;
         }
+
+        this.onChange(change);
     }
 
     onNameChanged = (e: ChangeEvent<HTMLInputElement>) => {
-        const {priority} = this.state;
+        const data = this.props.filters || {};
         const value = e.target.value;
+
+        const change: IFilters = {...data};
+
         if (value.length < 100) {
-            this.setState({name: value});
-            this.onFilter({
-                priority: priority || 0,
-                name: value,
-                description: ''
-            })
+            change.name = value;
         }
+
+        this.onChange(change);
     }
 
     onDescriptionChanged = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const data = this.props.filters || {};
         const value = e.target.value;
+
+        const change: IFilters = {...data};
+
         if (value.length < 2000) {
-            this.setState({description: value});
+            change.description = value;
         }
+
+        this.onChange(change);
+    }
+
+    onChange = (change: IFilters) => {
+        const {priority, name, description} = this.props.filters || {};
+        const data: IFilters = {}
+
+        if (priority) {
+            data.priority = priority;
+        }
+
+        if (name && name.toString().length) {
+            data.name = name;
+        }
+
+        if (description && description.toString().length) {
+            data.description = description;
+        }
+
+        this.onFilter({...data, ...change});
     }
 
     onSave = () => {
+        const {priority, name, description} = this.props.filters || {};
         const {save} = this.props;
-        const {priority, name, description} = this.state;
 
-        save({
-            priority: priority || 0,
-            name,
-            description
-        });
-
-        this.setState(this.getInitialState());
+        if (name && priority) {
+            save({
+                priority,
+                name,
+                description
+            } as ITaskData);
+        }
     }
 
-    onFilter(filterData: ITaskData) {
-        const {filter} = this.props;
-        if (filter) {
-            filter(filterData);
+    onFilter(filterData: IFilters) {
+        const {onChange} = this.props;
+        if (onChange) {
+            onChange(filterData);
         }
     }
 
     onSort(property: string) {
 
         return () => {
-            const {sort, currentSort} = this.props;
+            const {onSort, currentSort} = this.props;
 
             const newSort = currentSort ? {...currentSort} : {};
 
@@ -113,17 +118,22 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
                 default: newSort[property] = 'asc';
             }
 
-            if (sort) {
-                sort(newSort);
+            if (onSort) {
+                onSort(newSort);
             }
         }
 
     }
 
     render() {
+        const {priority, name, description} = this.props.filters || {};
+
+        console.log(priority);
+        console.log(name);
+        console.log(description);
+
         const {mode} = this.props;
-        const {priority, name, description, expanded} = this.state;
-        const {sort, currentSort} = this.props;
+        const {onSort, currentSort} = this.props;
 
         const sortElement = (label: string, property: string) => {
             let sortMarker = null;
@@ -134,13 +144,12 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
 
                 sortMarker = (<span className={styles['sort-marker']}>{text}</span>);
             }
-            return sort ? (
+            return onSort ? (
                 <span onClick={this.onSort(property)} className={styles.sort}>{label}{sortMarker}</span>
             ) : (
                 <span>{label}{sortMarker}</span>
             )
         }
-
 
         return (
             <div className={styles.root}>
@@ -151,11 +160,11 @@ export default class TaskForm extends React.Component<TaskFormProps, TaskFormSta
                     </label>
                     <label className={styles.name}>
                         {sortElement('Заголовок', 'name')}
-                        <input className={join('text-field')} value={name} onChange={this.onNameChanged}/>
+                        <input className={join('text-field')} value={name || ''} onChange={this.onNameChanged}/>
                     </label>
                     <label className={styles.description}>
                         {sortElement('Описание', 'description')}
-                        <textarea className={join('text-field')} value={description} onChange={this.onDescriptionChanged}/>
+                        <textarea className={join('text-field')} value={description || ''} onChange={this.onDescriptionChanged}/>
                     </label>
                 </div>
                 {mode === 'edit' ? (

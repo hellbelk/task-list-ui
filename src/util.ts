@@ -1,1 +1,1 @@
-export const join = (...classNames: string[]) => classNames.join(' ');
+export const join = (...classNames: Array<string | null | undefined>) => classNames.filter(className => className).join(' ');

@@ -26,6 +26,9 @@ code {
   background-color: transparent;
   cursor: pointer;
   outline: none;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
 }
 
 .primary.button {

@@ -6,6 +6,7 @@ import {join} from '../../util';
 
 interface TaskProps {
     task: ITask
+    selected?: boolean;
     onDelete?: (task: ITask) => void;
 }
 
@@ -17,9 +18,9 @@ export default class Task extends React.Component<TaskProps> {
     }
 
     render() {
-        const {priority, name, description} = this.props.task;
+        const {task: {priority, name, description}, selected} = this.props;
         return (
-            <div className={join('task', styles.root)}>
+            <div className={join('task', styles.root, selected ? styles.selected : null)}>
                 <div className={styles.controls}>
                     <div className={styles.delete} onClick={this.onDelete}><img src={deleteIcon}/></div>
                 </div>

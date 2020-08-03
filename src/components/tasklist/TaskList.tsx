@@ -4,30 +4,17 @@ import Task from '../task/Task';
 import styles from './TaskList.module.css';
 
 interface TaskListProps {
-    hasMore?: boolean;
     tasks: ITask[];
+    selectedTasks?: ITask[];
     onDelete?: (task: ITask) => void;
-    onLoadMore?: () => void;
 }
 
-export default class TaskList extends React.Component<TaskListProps> {
-
-    onLoadMore = () => {
-        const {onLoadMore} = this.props;
-        if (onLoadMore) {
-            onLoadMore();
-        }
-    }
-
-    render() {
-        const {tasks, onDelete, hasMore} = this.props;
-        return (
-            <div className={styles.root}>
-                {tasks.map(task => (<Task key={task.id} task={task} onDelete={onDelete}/>))}
-                {hasMore ? (
-                    <div className={styles['load-more']} onClick={this.onLoadMore}>Загрузить ещё</div>
-                ) : null}
-            </div>
-        )
-    }
+const TaskList = ({tasks, onDelete, selectedTasks}: TaskListProps) =>  {
+    return (
+        <div className={styles.root}>
+            {tasks.map(task => (<Task selected={!!(selectedTasks && selectedTasks.find(t => t.id === task.id))} key={task.id} task={task} onDelete={onDelete}/>))}
+        </div>
+    )
 }
+
+export default TaskList;
