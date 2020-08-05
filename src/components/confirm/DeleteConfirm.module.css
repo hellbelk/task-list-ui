@@ -33,3 +33,8 @@
     margin-left: 16px;
 }
 
+.options {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+}

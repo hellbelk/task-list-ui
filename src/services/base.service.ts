@@ -1,4 +1,6 @@
-const BASE_API_URL = 'http://localhost:3000/';
+import {API_HOST, REST_API_PORT} from '../config';
+
+const BASE_API_URL = `http://${API_HOST}:${REST_API_PORT}/`;
 
 export abstract class BaseService {
     async request(url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any) {

@@ -1,0 +1,23 @@
+.root {
+    position: absolute;
+    width: 100vw;
+    left: 0;
+    top: 0;
+}
+
+.notification {
+    display: flex;
+    width: 60%;
+    padding: 8px 16px;
+    text-align: left;
+    margin: auto;
+    background-color: #dab9f5;
+    border: 1px solid #ae5bf8;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.notification>div:first-child {
+    line-height: 40px;
+    flex-grow: 1;
+}

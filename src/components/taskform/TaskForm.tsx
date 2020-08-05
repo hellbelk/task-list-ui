@@ -128,10 +128,6 @@ export default class TaskForm extends React.Component<TaskFormProps>{
     render() {
         const {priority, name, description} = this.props.filters || {};
 
-        console.log(priority);
-        console.log(name);
-        console.log(description);
-
         const {mode} = this.props;
         const {onSort, currentSort} = this.props;
 
